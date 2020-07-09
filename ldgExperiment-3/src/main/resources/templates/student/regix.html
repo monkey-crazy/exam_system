@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xlmns:th="http://www.tymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Please regix</title>
+<link th:href="@{/webjars/bootstrap/4.3.0/css/bootstrap.css}"
+	rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<div  style=" width: 500px ; position: absolute; height: 800px; left: 500px" >
+
+
+<div align="center"><font color="red" size="4">欢迎注册考试系统！</font></div>
+	<form role="form" th:action="@{/studentregix}" method="post"
+		enctype="multipart/form-data">
+		<div class="form-group">
+			<label for="name" th:text="#{regix.sno}">学号</label> <font color="red">
+				<label for="name"
+				th:if="${errors!=null && #maps.containsKey(errors,'studentIdError')}"
+				th:text="${errors.studentIdError}"></label>
+			</font> <input type="text" class="form-control" name="studentId"
+				placeholder="请输入学号">
+		</div>
+	
+		<div class="form-group">
+			<label for="name" th:text="#{regix.name}">姓名</label> <font
+				color="red"> <label for="name"
+				th:if="${errors!=null && #maps.containsKey(errors,'studentNameError')}"
+				th:text="${errors.studentNameError}"></label>
+			</font> <input type="text" class="form-control" name="studentName"
+				placeholder="请输入姓名">
+		</div>
+		<div class="form-group">
+			<label for="name" th:text="#{regix.major}">专业</label> <font
+				color="red"> 
+			</font> <input type="text" class="form-control" name="major"
+				placeholder="请输入专业">
+		</div>
+		<div class="form-group">
+			<label for="name" th:text="#{regix.password}">密码</label> <font
+				color="red"> <label for="name"
+				th:if="${errors!=null && #maps.containsKey(errors,'passwordError')}"
+				th:text="${errors.passwordError}"></label>
+			</font> <input type="password" class="form-control" name="password"
+				placeholder="请输入密码">
+		</div>
+		<div class="form-group">
+			<label for="name" th:text="#{regix.photo}">照片</label> <input
+				type="file" class="form-control" name="stuphoto" accept="image/*">
+		</div>
+		<button type="submit" class="btn btn-primary"
+			th:text="#{regix.submit}">提交</button>&nbsp;&nbsp;&nbsp;
+		<a class="btn btn-primary" th:href="@{/login}">去登陆</a>
+		<div class="form-group">
+			<a th:href="@{/regix(l='zh',c='CN')}">中文</a> <a
+				th:href="@{/regix(l='en',c='US')}">英文</a>
+		</div>
+	</form>
+	</div>
+</body>
+</html>

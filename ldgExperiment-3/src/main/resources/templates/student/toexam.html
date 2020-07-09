@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xlmns:th="http://www.tymeleafe.org">
+<head>
+<meta charset="UTF-8">
+<title>Please answer the questions</title>
+<link rel="stylesheet"
+	th:href="@{/webjars/bootstrap/4.3.0/css/bootstrap.css}">
+<script th:src="@{/webjars/jquery/3.0.0/jquery.js}"></script>
+<script th:src="@{/webjars/bootstrap/4.3.0/js/bootstrap.js}"></script>
+</head>
+<script th:src="@{/js/toexam.js}"></script>
+<body>
+	<table class="table">
+		<tr th:each="q,qstus:${questions}">
+			<td>
+				<p th:text="${qstus.index+1}"></p>
+				<p style="display: none;" th:text="${q.questionId}"></p>
+				<p th:text="${q.content}"></p> 
+				<textarea rows="3" cols="50"></textarea>
+			</td>
+		</tr>
+	</table>
+	<button id="submitquestion">交卷</button>
+</body>
+</html>

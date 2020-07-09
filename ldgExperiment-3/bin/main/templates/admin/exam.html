@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xlmns:th="http://www.tymeleafe.org">
+<head>
+<meta charset="UTF-8">
+<title sec:authorize="hasRole('ADMIN')">Administrator management exam page</title>
+<title sec:authorize="hasAuthority('TEACHER')" >Teacher management exam page</title>
+<link rel="stylesheet"
+	href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script
+	src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<script th:src="@{/js/admin_exam.js}"></script>
+<body>
+	<!--增加考试模态框 -->
+	<!-- 按钮触发模态框 -->
+	<button class="btn btn-primary btn-lg" data-toggle="modal"
+		data-target="#addModal" sec:authorize="!hasAuthority('TEACHER')" >+</button>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	<input placeholder="请输入要搜索的考试id" id="findId">
+	<button class="btn btn-primary " id="find">搜索</button>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	<a class="btn btn-primary " th:href="@{/index}">返回</a>
+	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="addModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+
+					<h4 class="modal-title" id="myModalLabel">新建考试</h4>
+				</div>
+				<div class="modal-body">
+					考试编号：<input type="text" id="examId"><br> 考试地点：<input
+						type="text" id="examPla"><br> 考试日期：<input type="date"
+						id="examDate"><br>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+					</button>
+					<button type="button" class="btn btn-primary" id="addexam" data-dismiss="modal">
+						新建</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+	<!--增加考试模态框 -->
+	<!--修改考试模态框 -->
+
+	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="updateModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+
+					<h4 class="modal-title" id="myModalLabel">修改考试</h4>
+				</div>
+				<div class="modal-body">
+					考试编号：<input type="text" id="updateExamId"><br> 考试地点：<input
+						type="text" id="updateExamPla"><br> 考试日期：<input
+						type="date" id="updateExamDate"><br>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+					</button>
+					<button type="button" class="btn btn-primary" id="updateExam" data-dismiss="modal">
+						修改</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+<div th:if="${exams.totalPages}==0">
+<font size="7" color="red">暂时没有考试信息！</font></div>
+	<!--修改考试模态框 -->
+	<table class="table" id="tb1" th:if="${exams.totalPages}!=0">
+		<tr>
+			<td>序号</td>
+			<td>考试id</td>
+			<td>考试地点</td>
+			<td>考试时间</td>
+			<td>操作</td>
+			<td sec:authorize="!hasAuthority('TEACHER')">操作</td>
+		</tr>
+
+		<tr th:each="exam,ind :${exams}">
+			<td th:text="${ind.index+1}"></td>
+			<td th:text="${exam.getExamId()}"></td>
+			<td th:text="${exam.getExamPla()}"></td>
+			<td th:text="${exam.getExamDate()}"></td>
+			<td><button class="update">修改</button></td>
+			<td sec:authorize="!hasAuthority('TEACHER')"><button class="delete">删除</button></td>
+		</tr>
+
+	</table>
+	
+	<!-- 翻页 -->
+	<ul class="pagination" th:if="${exams.totalPages}!=0">
+		<li th:if="${exams.number} eq 0"><a href="#">上一页</a></li>
+		<li th:if="${exams.number} gt 0"><a
+			th:href="@{/admin/showexam(page=${exams.number-1},size=${exams.size})}">上一页</a></li>
+		<li>&nbsp;&nbsp;&nbsp; <a href="#">1</a></li>
+		<li th:if="${exams.number+1} eq ${exams.totalPages}"><a
+			href="#">下一页</a></li>
+		<li th:if="${exams.number+1} lt ${exams.totalPages}"><a
+			th:href="
+			@{/admin/showexam(page=${exams.number+1},size=${exams.size})}">下一页</a></li>
+		<li>&nbsp;&nbsp;&nbsp;</li>
+		<li><span id="ii1" th:text="${exams.totalPages}" /></li>
+		<li>&nbsp;&nbsp;</li>
+		<li><span id="ii2" th:text="${exams.number+1}" /></li>
+
+
+	</ul>
+	
+
+<span style="display: none;" class="power1" sec:authorize="hasAuthority('TEACHER')" >[[${#session.getAttribute("teacher").getPower().getPowerId()}]]</span>
+<span id="indx" sec:authorize="!hasAuthority('TEACHER')" style="display: none;" >admin</span>
+
+</body>
+</html>

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xlmns:th="http://www.tymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link th:href= "@{/webjars/bootstrap/4.3.0/css/bootstrap.css}" rel="stylesheet" type="text/css">
+</head>
+<body>
+<h1>你的程序发生了异常</h1>
+<h2>问题如下：</h2>
+<h3 th:text="${error}"></h3>
+
+</body>
+</html>

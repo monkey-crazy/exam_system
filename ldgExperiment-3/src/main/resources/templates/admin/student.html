@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xlmns:th="http://www.tymeleaf.org"
+	sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<meta charset="UTF-8">
+<title sec:authorize="hasRole('ADMIN')">Administrator management student page</title>
+<title sec:authorize="hasAuthority('TEACHER')" >Teacher management student page</title>
+<link rel="stylesheet"
+	href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script
+	src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+<script th:src="@{/js/student.js}"></script>
+
+<body>
+
+
+	<input placeholder="请输入要搜索的学号" id="findId">
+	<button class="btn btn-primary " id="findid">搜索</button>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	<input placeholder="请输入要搜索的学生姓名" id="findName">
+	<button class="btn btn-primary " id="findname">搜索</button>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	<a class="btn btn-primary " th:href="@{/index}">返回</a>
+
+	<!--修改学生信息模态框 -->
+
+	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="updateModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+
+					<h4 class="modal-title" id="myModalLabel">修改信息</h4>
+				</div>
+				<div class="modal-body">
+					学号：<input type="text" id="u_id" class="form-control" readonly="readonly"><br> 
+					姓名：<input type="text" id="u_name" class="form-control"><br>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+					</button>
+					<button type="button" class="btn btn-primary" id="updateStu"
+						data-dismiss="modal">修改</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+
+	<!--修改考试模态框 -->
+	<table class="table" id="tb1">
+		<tr>
+			<td>序号</td>
+			<td>学号</td>
+			<td>姓名</td>
+			<td>专业</td>
+			<td>头像</td>
+			<td sec:authorize="!hasAuthority('TEACHER')">操作</td>
+			<td sec:authorize="!hasAuthority('TEACHER')">操作</td>
+		</tr>
+
+		<tr th:each="exam,ind :${students}">
+			<td th:text="${ind.index+1}"></td>
+			<td th:text="${exam.studentId}"></td>
+			<td th:text="${exam.studentName}"></td>
+			<td th:text="${exam.major}"></td>
+			
+			<td ><img th:src="'data:image/png; base64,'+${exam.stuphoto}"
+				width="50px" height="80px"></td>
+			<td sec:authorize="!hasAuthority('TEACHER')"><button class="update">修改</button></td>
+			<td sec:authorize="!hasAuthority('TEACHER')"><button class="delete">删除</button></td>
+		</tr>
+
+	</table>
+	<div id="fy">
+	<ul class="pagination" th:each="Maps :${exam}" >
+		<li th:if="${Maps.number} eq 0"><a href="#">上一页</a></li>
+		<li th:if="${Maps.number} gt 0"><a
+			th:href="@{/admin/findAll(page=${Maps.number-1},size=${Maps.size})}">上一页</a></li>
+		
+		<li th:if="${Maps.number+1} eq ${Maps.totalPages}"><a
+			href="#">下一页</a></li>
+		<li th:if="${Maps.number+1} lt ${Maps.totalPages}"><a
+			th:href="
+			@{/admin/findAll(page=${Maps.number+1},size=${Maps.size})}">下一页</a></li>
+		<li><span id="ii1" th:text="${Maps.totalPages}" ></span></li>
+		<li><span id="ii2" th:text="${Maps.number+1}"></span></li>
+
+	</ul>
+	</div>
+	<!-- 用于区分管理员和老师 -->
+<span id="indx" sec:authorize="!hasAuthority('TEACHER')" style="display: none;" >admin</span>
+
+
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xlmns:th="http://www.tymeleafe.org">
+<head>
+<meta charset="UTF-8">
+<title>Please read the paper</title>
+<link rel="stylesheet"
+	th:href="@{/webjars/bootstrap/4.3.0/css/bootstrap.css}">
+<script th:src="@{/webjars/jquery/3.0.0/jquery.js}"></script>
+<script th:src="@{/webjars/bootstrap/4.3.0/js/bootstrap.js}"></script>
+</head>
+<script type="text/javascript"></script>
+<script th:src="@{/js/markingPaper.js}"></script>
+<body>
+<div align="center"><p th:if="${seas}==null"><font color="red" size="5">没有要评阅的试题！！</font> </p></div>
+
+	<table class="table"  >
+	
+	
+	
+	
+		<tr th:each="answer:${seas}">
+		
+			<td>
+				<p style="display: none" th:text="${answer.student.studentId}"></p>
+				<p style="display: none" th:text="${answer.exam.examId}"></p>
+				<p style="display: none" th:text="${answer.question.questionId}"></p>
+				<p th:text="${answer.question.content}"></p>
+				<p th:text="${answer.answer}"></p> 给分: <input type="text" autofocus="autofocus" >
+			</td>
+		</tr>
+	</table>
+	<button id="submit" class='btn btn-primary' th:if="${seas}!=null">提交成绩</button>
+	<a th:href="@{/index}" class='btn btn-primary' th:if="${seas}!=null">返回</a>
+	<div align="center">
+	<a th:href="@{/index}" class='btn btn-primary' th:if="${seas}==null">返回</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xlmns:th="http://www.tymeleafe.org">
+<head>
+<meta charset="UTF-8">
+<title>Student registration</title>
+<link rel="stylesheet"
+	href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script
+	src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<script th:src="@{/js/exam.js}"></script>
+<body>
+
+	<!--报名确认  -->
+
+	<div class="modal fade" id="addModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+
+					<h4 class="modal-title" id="myModalLabel">确认报名</h4>
+				</div>
+				<div class="modal-body">
+					<p>您确定要报这场考试??</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">离开
+					</button>
+					<button type="button" class="btn btn-primary" id="addexam"
+						data-dismiss="modal">确认</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- 报名确认 -->
+
+<a th:href="@{/index}" class='btn btn-primary'> 返回</a>
+
+	<div th:if="${exams.size()==0}" align="center">
+	
+	<font color="red" size="8" >暂无考试信息</font> 
+	</div>
+
+	<div th:if="${exams.size()!=0}">
+
+		<table class="table" id="tb1">
+			<tr>
+				<td>序号</td>
+				<td>考试id</td>
+				<td>考试地点</td>
+				<td>考试时间</td>
+				<td>操作</td>
+			</tr>
+
+			<tr th:each="exam,ind :${exams}">
+				<td th:text="${ind.index+1}"></td>
+				<td th:text="${exam.examId}"></td>
+				<td th:text="${exam.examPla}"></td>
+				<td th:text="${exam.examDate}"></td>
+				<td th:id="${exam.examId}">
+					<button class="baoming">报名</button>
+				</td>
+			</tr>
+
+		</table>
+	</div>
+<span style="display: none;" class="power1" sec:authorize="hasAuthority('STUDENT')" >[[${#session.getAttribute("student").getPower().getPowerId()}]]</span>
+</body>
+</html>

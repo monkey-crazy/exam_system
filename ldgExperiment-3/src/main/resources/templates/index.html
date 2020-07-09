@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xlmns:th="http://www.tymeleaf.org"
+	sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<meta charset="UTF-8">
+<title sec:authorize="hasRole('ADMIN')">Administrator management page</title>
+<title sec:authorize="hasAuthority('TEACHER')">Teacher management page</title>
+<title sec:authorize="hasAuthority('STUDENT')">Student management page</title>
+<link rel="stylesheet"
+	href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script
+	src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+<!-- js代码 -->
+<script th:src="@{/js/index.js}"></script>
+<body id="body">
+
+	<!-- 以下是登陆之后显示 -->
+	<div sec:authorize="isAuthenticated()">
+		<h1>
+			欢迎你， <span sec:authentication="name"></span>!
+
+		</h1>
+        <!-- 查看个人信息（查，授权修改） -->
+        <div style="float: left;" sec:authorize="!hasRole('ADMIN')"><button id="grxx"  class="btn btn-primary">查看个人信息</button></div>
+		<!--学生权限  -->
+		<div sec:authorize="hasAuthority('STUDENT')" style="float: left;">
+
+
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<!-- 查看报名信息 -->
+			<button id="bmxx" class="btn btn-primary">查看报名信息</button>
+			<!-- 报名考试 -->
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a th:href="@{/student/showAllExams}"
+				class="btn btn-primary">去报名</a> 
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+		</div>
+		<!-- 老师权限 -->
+		<div sec:authorize="hasAuthority('TEACHER')" style="float: left;">
+				
+			<!--信息管理  -->
+			
+			<!-- 查看学生信息 （查）-->
+			<!--  -->
+			<div class="dropdown" style="float: left;">
+				<button type="button" class="btn dropdown-toggle btn-primary" id="dropdownMenu1"
+					data-toggle="dropdown">
+					信息管理 <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu " role="menu"
+					aria-labelledby="dropdownMenu1">
+					<!--查看老师信息 （增删改） -->
+					<li class="btn btn-primary" role="presentation"><a role="menuitem" tabindex="-1"
+						th:href="@{/teacher/showstudent(page=${0},size=${10})}" >学生信息</a></li>
+					<!--查看考试信息 （增删改查）-->
+					<li class="btn btn-primary" role="presentation"><a role="menuitem" tabindex="-1"
+						th:href="@{/teacher/showexam(page=${0},size=${10})}">考试信息</a></li>
+					<!--查看学生信息（删改查）  -->
+					<li class="btn btn-primary" role="presentation"><a role="menuitem" tabindex="-1"
+					th:href="@{/teacher/showquestion(page=${0},size=${10})}"	>试题信息</a></li>
+
+
+				</ul>
+			</div>
+			<button type="button" class="btn btn-primary" id="markpaper">阅卷</button>
+			
+			<!-- 查看考试信息（查） -->
+			
+			
+			<!-- 查看试题信息 （增查删改）-->
+			
+			
+			<!-- 阅卷 -->
+			
+
+		</div >
+		<!-- 管理员权限 -->
+		<div sec:authorize="hasRole('ADMIN')">
+
+
+
+			<!--信息管理  -->
+			<div class="dropdown" style="float: left;">
+				<button type="button" class="btn dropdown-toggle btn-primary" id="dropdownMenu1"
+					data-toggle="dropdown">
+					信息管理 <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu " role="menu"
+					aria-labelledby="dropdownMenu1">
+					<!--查看老师信息 （增删改） -->
+					<li class="btn btn-primary" role="presentation"><a role="menuitem" tabindex="-1"
+						th:href="@{/admin/showteacher(page=${0},size=${10})}"
+						>老师信息</a></li>
+					<!--查看考试信息 （增删改查）-->
+					<li class="btn btn-primary" role="presentation"><a role="menuitem" tabindex="-1"
+						th:href="@{/admin/showexam(page=${0},size=${10})}">考试信息</a></li>
+					<!--查看学生信息（删改查）  -->
+					<li class="btn btn-primary" role="presentation"><a role="menuitem" tabindex="-1"
+						th:href="@{/admin/findAll(page=${0},size=${10})}">学生信息</a></li>
+
+				</ul>
+			</div>
+
+			<!--权限管理  -->
+			<div style="float: left;"> 
+			<a class="btn btn-primary" th:href="@{/admin/power}">权限管理</a>
+			</div>
+
+			<!--  -->
+			<!--  -->
+		</div>
+		<div style="float: left;" ><a th:href="@{/logout}" class="btn btn-primary">退出登陆</a></div>
+		
+
+
+
+	</div>
+	<!-- 以上是登陆之后显示 -->
+
+
+	<!-- 以下是没有登陆显示 -->
+	<div sec:authorize="!isAuthenticated()" align="center">
+		你好请<a th:href="@{/login}">登陆!</a>
+	</div>
+	<!-- 以上是没有登陆显示 -->
+	
+	<!-- 显示信息 -->
+	<div id="consol" style="float: none">	
+	<table id="tb2" class="table"></table>	
+	</div>
+	<!-- 查看个人信息(非管理员) -->
+	<div id=ckgrxx style="display: none;" sec:authorize="!hasRole('ADMIN')" >
+		<table class="table" id="tb3">
+		<tr>
+			<th>账号</th>
+			<th>姓名</th>
+			<th >专业</th>
+			<th sec:authorize="hasAuthority('STUDENT')">照片</th>
+			
+		</tr>
+		<tr>
+			<td sec:authorize="hasAuthority('STUDENT')">[[${#session.getAttribute("student").getStudentId()}]]</td>
+			<td sec:authorize="hasAuthority('STUDENT')">[[${#session.getAttribute("student").getStudentName()}]]</td>
+			<td sec:authorize="hasAuthority('STUDENT')">[[${#session.getAttribute("student").getMajor()}]]</td>
+			<td sec:authorize="hasAuthority('STUDENT')"><img th:src="'data:image/png; base64,'+${photo}"
+				width="50px" height="80px">
+			</td>
+			<td sec:authorize="hasAuthority('TEACHER')">[[${#session.getAttribute("teacher").getTeacherId()}]]</td>
+			<td sec:authorize="hasAuthority('TEACHER')">[[${#session.getAttribute("teacher").getTeacherName()}]]</td>
+			<td sec:authorize="hasAuthority('TEACHER')">[[${#session.getAttribute("teacher").getMajor()}]]</td>
+			
+		</tr>
+		
+		
+		
+		
+	</table>
+	<button id="updatepw">修改密码</button>
+	</div>
+	
+	
+	
+	<!--修改考试模态框 -->
+
+	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="updateModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+
+					<h4 class="modal-title" id="myModalLabel">修改信息</h4>
+				</div>
+				<div class="modal-body">
+				<table>
+				<tr><td> 账号：</td><td> <input type="text" readonly="readonly"  id="uid" ></td>  </tr>
+				<tr><td> 姓名：</td><td> <input type="text"  id="name"></td>  </tr>
+				<tr><td> 专业： </td><td> <input type="text"  id="major"> </td>  </tr>
+				<tr><td> 密码：</td><td> <input type="password" id="pwd" ></td>  </tr>
+				
+				
+				
+				
+				</table>
+				
+				
+				
+				
+				
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+					</button>
+					<button type="button" class="btn btn-primary" id="updatexx" data-dismiss="modal">
+						修改</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+<span style="display: none;" id="major1" sec:authorize="hasAuthority('TEACHER')" >[[${#session.getAttribute("teacher").getMajor()}]]</span>
+<span style="display: none;" class="major2" sec:authorize="hasAuthority('TEACHER')">teacher</span>
+<span style="display: none;" class="major2" sec:authorize="hasAuthority('STUDENT')">student</span>
+
+<hr>
+<span style="display: none;" class="power1" sec:authorize="hasAuthority('TEACHER')" >[[${#session.getAttribute("teacher").getPower().getPowerId()}]]</span>
+<span style="display: none;" class="power1" sec:authorize="hasAuthority('STUDENT')" >[[${#session.getAttribute("student").getPower().getPowerId()}]]</span>
+	<!--修改个人信息模态框 -->
+</body>
+</html>

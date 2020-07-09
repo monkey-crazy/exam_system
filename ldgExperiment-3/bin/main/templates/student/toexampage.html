@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xlmns:th="http://www.tymeleafe.org">
+<head>
+<meta charset="UTF-8">
+<title>Please answer the questions</title>
+<link rel="stylesheet"
+	th:href="@{/webjars/bootstrap/4.3.0/css/bootstrap.css}">
+<script th:src="@{/webjars/jquery/3.0.0/jquery.js}"></script>
+<script th:src="@{/webjars/bootstrap/4.3.0/js/bootstrap.js}"></script>
+</head>
+
+
+<script type="text/javascript"  th:inline="javascript">
+/**
+ *  toexampage.html
+ */
+
+		var questions=[[${questions}]];
+		//localStorage.clear();
+		//for(var i=0;i<questions.length;i++){ //questins里面 都是json数据JSON. stringify()
+		//localStorage.setItem("que"+(i+1),JSON.stringify(questions[i]));
+		//}
+
+		//添加一个答案的字段
+		for(var i=0;i<questions.length;i++){
+			questions [i].answer="";
+			var queNo=1;
+		}
+		$(function(){
+			$("#begin").click(begin);
+			
+		});
+		
+		function begin(){
+		$("#begin1").css("display","none");
+		$("#begins").css("display","none");
+		$("#queArea").css("display","block");
+		$("#controllArea").css("display","block");
+		$("#queNo").html(queNo) ;
+		$("#question").html(questions[queNo-1].content);
+
+		}
+		
+		function nextQue(){
+			//把当前的题的答案存起来
+			questions[queNo-1].answer=$("#answer").val();
+			//把下一个题的内容拿出来
+			if(queNo+1<questions.length+1){
+				$("#answer").val("");
+				queNo=queNo+1 ;
+				$("#queNo").html(queNo);
+				$("#question").html(questions[queNo-1].content);
+				$("#answer").val(questions[queNo-1].answer);
+			}else{
+			alert("没有下一题了");
+			}
+
+		
+		}
+		function lastQue(){
+			//把当前的题的答案存起来
+			questions[queNo-1].answer=$("#answer").val();
+			//把上一个题的内容拿出来
+			if(queNo-1>0){
+				$("#answer").val("");
+				queNo=queNo-1 ;
+				$("#queNo").html(queNo);
+				$("#question").html(questions[queNo-1].content);
+				$("#answer").val(questions[queNo-1].answer);
+			}else{
+			alert("没有上一题了");
+			}
+		}
+
+		
+
+		function submitPaper() {
+			questions[queNo-1].answer=$("#answer").val();
+			var answers=questions;
+			for(var i=0;i<answers.length;i++){
+				if(answers[i].answer==""){
+					alert("你的第"+(i+1)+"题没做!");
+				}
+			}
+			
+			if (!window.confirm("你确定要交卷吗"))
+				return;
+
+			$.ajax({
+
+				url : "/test/student/submitPaper",
+				type : 'post',
+				data : JSON.stringify(answers),
+				contentType : 'application/json',
+				success : function(data) {
+					alert(data);
+					//$("textarea").attr("disables", "none");
+					window.location.href="http://localhost:8080/test/index";  
+				}
+			});
+		}
+</script>
+
+<body>
+	<div>
+		<h1>[[${#session.getAttribute("student").getStudentName()}]],你好! </h1>
+		<h2>你的考试编号是<span th:text="${session.ExamId}"></span></h2>
+		<h3 id = "begin1"><font color="red">考试一经开始，不可中途离开！</font><br>
+		<button  id="begin" class="btn btn-primary" > 点击这里开始考试!</button> </h3><br>
+		<h3 id="begins"><a class="btn btn-primary" th:href="@{/index}">退出考试！</a></h3>
+	</div>
+	<div id="queArea" style="display :none">
+		<p>第<span id= "queNo"></span>题</p>
+		<p id="question"></p>
+		<textarea rows="5" cols="60" id= "answer"  autofocus="autofocus" required="required" wrap="hard" placeholder="在此答题"></textarea>
+	</div>
+	<div id= "controllArea" style="display:none">
+		<button id= "LastQue" onclick="lastQue()">上一题</button>
+		<button id= "nextQue" onclick="nextQue()">下一题</button>
+		<button id= "submit" onclick="submitPaper()">交卷</button>
+	</div>
+	
+	
+</body>
+</html>

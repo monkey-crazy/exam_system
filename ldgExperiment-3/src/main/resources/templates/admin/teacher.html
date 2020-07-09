@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xlmns:th="http://www.tymeleaf.org"
+	sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<meta charset="UTF-8">
+<title>Administrator management teacher</title>
+<link rel="stylesheet"
+	href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script
+	src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+<script th:src="@{/js/teacher.js}"></script>
+<body>
+	<!--增加老师模态框 -->
+	<!-- 按钮触发模态框 -->
+	<button class="btn btn-primary btn-lg" data-toggle="modal"
+		data-target="#addModal">+</button>
+
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	<input placeholder="请输入要搜索的教师id" id="findId">
+	<button class="btn btn-primary " id="find">搜索</button>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	<a class="btn btn-primary " th:href="@{/index}">返回</a>
+	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="addModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+
+					<h4 class="modal-title" id="myModalLabel">增加老师</h4>
+				</div>
+				<div class="modal-body">
+					<table>
+						<tr>
+							<th>老师id</th>
+							<td><input type="text" id="ids"></td>
+						</tr>
+						<tr>
+							<th>老师姓名</th>
+							<td><input type="text" id="name"></td>
+						</tr>
+						<tr>
+							<th>专业</th>
+							<td><input type="text" id="major"></td>
+						</tr>
+						<tr>
+							<th>密码</th>
+							<td><input type="password" id="pwd"></td>
+						</tr>
+					</table>
+
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+					</button>
+					<button type="button" class="btn btn-primary" id="addteacher"
+						data-dismiss="modal">添加</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+	<!--增加考试模态框 -->
+	<!--修改教师模态框 -->
+
+	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="updateModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+
+					<h4 class="modal-title" id="myModalLabel">修改教师</h4>
+				</div>
+				<div class="modal-body">
+					<table>
+						<tr>
+							<th>老师id</th>
+							<td><input type="text" id="u_id" readonly="readonly">
+							</td>
+						</tr>
+						<tr>
+							<th>老师姓名</th>
+							<td><input type="text" id="u_name"></td>
+						</tr>
+						<tr>
+							<th>专业</th>
+							<td><input type="text" id="u_major"></td>
+						</tr>
+
+					</table>
+
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+					</button>
+					<button type="button" class="btn btn-primary" id="updateteacher"
+						data-dismiss="modal">修改</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+
+	<!--修改教师模态框 -->
+	<div th:if="${teacher.totalPages}==0">
+		<p>
+			<font color="red" size="7">暂无教师信息! 请添加!!</font>
+		</p>
+
+	</div>
+	<table class="table" id="tb1" th:if="${teacher.totalPages}!=0">
+		<tr>
+			<td>序号</td>
+			<td>教师id</td>
+			<td>教师姓名</td>
+			<td>专业</td>
+			<td>操作</td>
+			<!-- 修改 -->
+			<td>操作</td>
+			<!-- 删除 -->
+		</tr>
+
+		<tr th:each="tea,ind :${teacher}">
+			<td th:text="${ind.index+1}"></td>
+			<td th:text="${tea.getTeacherId()}"></td>
+			<td th:text="${tea.getTeacherName()}"></td>
+			<td th:text="${tea.getMajor()}"></td>
+			<td><button class="update">修改</button></td>
+			<td><button class="delete">删除</button></td>
+		</tr>
+
+	</table>
+	<ul class="pagination" th:if="${teacher.totalPages}!=0">
+		<li th:if="${teacher.number} eq 0"><a href="#">上一页</a></li>
+		<li th:if="${teacher.number} gt 0"><a
+			th:href="@{/admin/showteacher(page=${teacher.number-1},size=${teacher.size})}">上一页</a></li>
+		<li>&nbsp;&nbsp;&nbsp; <a href="#">1</a></li>
+		<li th:if="${teacher.number+1} eq ${teacher.totalPages}"><a
+			href="#">下一页</a></li>
+		<li th:if="${teacher.number+1} lt ${teacher.totalPages}"><a
+			th:href="
+			@{/admin/showteacher(page=${teacher.number+1},size=${teacher.size})}">下一页</a></li>
+		<li>&nbsp;&nbsp;&nbsp;</li>
+		<li><span id="ii1" th:text="${teacher.totalPages}" /></li>
+		<li>&nbsp;&nbsp;</li>
+		<li><span id="ii2" th:text="${teacher.number+1}" /></li>
+
+
+	</ul>
+
+</body>
+</html>

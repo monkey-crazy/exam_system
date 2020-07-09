@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xlmns:th="http://www.tymeleafe.org">
+<head>
+<meta charset="UTF-8">
+<title>Teacher management questionss</title>
+<link rel="stylesheet"
+	href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script
+	src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<script th:src="@{/js/question.js}" ></script>
+<body>
+	<!--增加考试模态框 -->
+	<!-- 按钮触发模态框 -->
+	<button class="btn btn-primary btn-lg" data-toggle="modal"
+		data-target="#addModal" >+</button>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	<input placeholder="请输入要搜索的试题id" id="findId">
+	<button class="btn btn-primary " id="find1">搜索</button>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	<input placeholder="请输入要搜索的试题内容" id="findCon">
+	<button class="btn btn-primary " id="find2">搜索</button>
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	<a class="btn btn-primary " th:href="@{/index}">返回</a>
+	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="addModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+
+					<h4 class="modal-title" id="myModalLabel">新建试题</h4>
+				</div>
+				<div class="modal-body">
+					
+					所属专业:<input type="text" id="ma" ><br>
+					试题内容:<br>
+					<textarea id="context" rows="10" cols="40" autofocus="autofocus" required="required" wrap="hard" placeholder="输入试题内容！！"></textarea>
+				</div>
+				<div class="modal-footer">
+					<button id="tx1" type="button" class="btn btn-default" data-dismiss="modal">关闭
+					</button>
+					<button type="button" class="btn btn-primary" id="addquestion" data-dismiss="modal">
+						增加</button>
+				</div> 
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+	<!--增加试题模态框 -->
+	<!--修改试题模态框 -->
+
+	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="updateModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+
+					<h4 class="modal-title" id="myModalLabel">修改试题</h4>
+				</div>
+				<div class="modal-body">
+				<span id="th"></span><br>
+					修改试题：<br><textarea id="context2" rows="10" cols="40" autofocus="autofocus" required="required" wrap="hard"></textarea>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+					</button>
+					<button type="button" class="btn btn-primary" id="updatequestion" data-dismiss="modal">
+						修改</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+<div th:if="${questions.totalPages}==0">
+<font size="7" color="red">暂时没有考试信息！</font></div>
+	<!--修改试题模态框 -->
+	<table class="table" id="tb1" th:if="${questions.totalPages}!=0">
+		<tr>
+			<td>序号</td>
+			<td>试题id</td>
+			<td>试题内容</td>
+			<td>专业</td>
+			<td>操作</td>
+			<td>操作</td>
+		</tr>
+
+		<tr th:each="ques,ind :${questions}">
+			<td th:text="${ind.index+1}"></td>
+			<td th:text="${ques.getQuestionId()}"></td>
+			<td th:text="${ques.getContent()}"></td>
+			<td th:text="${ques.getMajor()}"> </td>
+			<td><button class="update">修改</button></td>
+			<td><button class="delete">删除</button></td>
+		</tr>
+
+	</table>
+	
+	<!-- 翻页 -->
+	<div id="fy">
+	<ul class="pagination" th:if="${questions.totalPages}!=0">
+		<li th:if="${questions.number} eq 0"><a href="#">上一页</a></li>
+		<li th:if="${questions.number} gt 0"><a
+			th:href="@{/teacher/showquestion(page=${questions.number-1},size=${questions.size})}">上一页</a></li>
+		<li>&nbsp;&nbsp;&nbsp; <a href="#">1</a></li>
+		<li th:if="${questions.number+1} eq ${questions.totalPages}"><a
+			href="#">下一页</a></li>
+		<li th:if="${questions.number+1} lt ${questions.totalPages}"><a
+			th:href="
+			@{/teacher/showquestion(page=${questions.number+1},size=${questions.size})}">下一页</a></li>
+		<li>&nbsp;&nbsp;&nbsp;</li>
+		<li><span id="ii1" th:text="${questions.totalPages}" /></li>
+		<li>&nbsp;&nbsp;</li>
+		<li><span id="ii2" th:text="${questions.number+1}" /></li>
+
+
+	</ul>
+	</div>
+
+<span style="display: none;" class="power1" sec:authorize="hasAuthority('TEACHER')" >[[${#session.getAttribute("teacher").getPower().getPowerId()}]]</span>
+</body>
+</html>
